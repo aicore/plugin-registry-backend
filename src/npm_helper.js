@@ -36,16 +36,16 @@ async function updateDownloadStats(searchList) {
         let element = searchList[i];
         if (element.hasOwnProperty('_source') && element._source.hasOwnProperty('totalDownloads')
             && element._source.hasOwnProperty('metadata')) {
+            let packageName = NPM_PACKAGE_PREFIX + searchList[i]._source.metadata.name;
             try {
-                let packageName = NPM_PACKAGE_PREFIX + searchList[i]._source.metadata.name;
                 let npmTotalDownloads = 0;
                 let npmResponse = await getNpmStats(packageName, NPM_STATS_START_DATE, CURR_DATE);
                 npmTotalDownloads = npmResponse.body.downloads;
                 element._source.npmDownloads = npmTotalDownloads;
                 element._source.totalDownloads += npmTotalDownloads;
             } catch (err) {
-                console.error("Error Updating Download data for Package :" + packageName 
-                + " Reason: " + JSON.stringify(err));
+                console.error("Error Updating Download data for Package :" + packageName
+                    + " Reason: " + JSON.stringify(err));
             }
         }
         modifiedList.push(element);
@@ -66,14 +66,14 @@ async function getNpmStats(pkg, start, end) {
             .get(url)
             .timeout({
                 response: 3 * 1000,
-                deadline: 5 * 1000,
+                deadline: 5 * 1000
             });
         if (!res && res.hasOwnProperty('statusCode') && res.statusCode === 400) {
             throw new Error("Error retrieving details from NPM API");
-        }       
+        }
         return {
             statusCode: res.statusCode,
-            body: body,
+            body: body
         };
     } catch (err) {
         throw err;
