@@ -1,32 +1,73 @@
-# template-nodejs
-A template project for nodejs. Has integrated linting, testing,
-coverage, reporting, GitHub actions for publishing to npm repository, dependency updates and other goodies.
-
-Easily use this template to quick start a production ready nodejs project template.
+# plugin-registry-backend
+Plugin Registry Backend service is a express JS service which supports clients 
+like Brackets Code Editor (https://brackets.io/) and Phoenix Code Editor(https://phoenix.core.ai/)
+by providing all the necessary APIs to render the in-app extension store. 
 
 ## Code Guardian
-[![<app> build verification](https://github.com/aicore/template-nodejs/actions/workflows/build_verify.yml/badge.svg)](https://github.com/aicore/template-nodejs/actions/workflows/build_verify.yml)
+[![<app> build verification](https://github.com/aicore/plugin-registry-backend/actions/workflows/build_verify.yml/badge.svg)](https://github.com/aicore/template-nodejs/actions/workflows/build_verify.yml)
 
-<a href="https://sonarcloud.io/summary/new_code?id=aicore_template-nodejs-ts">
-  <img src="https://sonarcloud.io/api/project_badges/measure?project=aicore_template-nodejs-ts&metric=alert_status" alt="Sonar code quality check" />
-  <img src="https://sonarcloud.io/api/project_badges/measure?project=aicore_template-nodejs-ts&metric=security_rating" alt="Security rating" />
-  <img src="https://sonarcloud.io/api/project_badges/measure?project=aicore_template-nodejs-ts&metric=vulnerabilities" alt="vulnerabilities" />
-  <img src="https://sonarcloud.io/api/project_badges/measure?project=aicore_template-nodejs-ts&metric=coverage" alt="Code Coverage" />
-  <img src="https://sonarcloud.io/api/project_badges/measure?project=aicore_template-nodejs-ts&metric=bugs" alt="Code Bugs" />
-  <img src="https://sonarcloud.io/api/project_badges/measure?project=aicore_template-nodejs-ts&metric=reliability_rating" alt="Reliability Rating" />
-  <img src="https://sonarcloud.io/api/project_badges/measure?project=aicore_template-nodejs-ts&metric=sqale_rating" alt="Maintainability Rating" />
-  <img src="https://sonarcloud.io/api/project_badges/measure?project=aicore_template-nodejs-ts&metric=ncloc" alt="Lines of Code" />
-  <img src="https://sonarcloud.io/api/project_badges/measure?project=aicore_template-nodejs-ts&metric=sqale_index" alt="Technical debt" />
+<a href="https://sonarcloud.io/summary/new_code?id=aicore_plugin-registry-backend">
+  <img src="https://sonarcloud.io/api/project_badges/measure?project=aicore_plugin-registry-backend&metric=alert_status" alt="Sonar code quality check" />
+  <img src="https://sonarcloud.io/api/project_badges/measure?project=aicore_plugin-registry-backend&metric=security_rating" alt="Security rating" />
+  <img src="https://sonarcloud.io/api/project_badges/measure?project=aicore_plugin-registry-backend&metric=vulnerabilities" alt="vulnerabilities" />
+  <img src="https://sonarcloud.io/api/project_badges/measure?project=aicore_plugin-registry-backend&metric=coverage" alt="Code Coverage" />
+  <img src="https://sonarcloud.io/api/project_badges/measure?project=aicore_plugin-registry-backend&metric=bugs" alt="Code Bugs" />
+  <img src="https://sonarcloud.io/api/project_badges/measure?project=aicore_plugin-registry-backend&metric=reliability_rating" alt="Reliability Rating" />
+  <img src="https://sonarcloud.io/api/project_badges/measure?project=aicore_plugin-registry-backend&metric=sqale_rating" alt="Maintainability Rating" />
+  <img src="https://sonarcloud.io/api/project_badges/measure?project=aicore_plugin-registry-backend&metric=ncloc" alt="Lines of Code" />
+  <img src="https://sonarcloud.io/api/project_badges/measure?project=aicore_plugin-registry-backend&metric=sqale_index" alt="Technical debt" />
 </a>
 
 
-# TODOs after template use
-1. Update package.json with your app defaults
-2. Check Build actions on pull requests.
-3. In sonar cloud, enable Automatic analysis from `Administration
-   Analysis Method` for the first time before a pull request is raised: ![image](https://user-images.githubusercontent.com/5336369/148695840-65585d04-5e59-450b-8794-54ca3c62b9fe.png)
-4. Check codacy runs on pull requests, set codacy defaults. You may remove codacy if sonar cloud is only needed.
-5. Update the above Code Guardian badges; change all `id=aicore_template-nodejs-ts` to the sonar id of your project fields.
+# API Documentation
+
+## SEARCH API
+
+This API supports text-based search queries (see below for detailed params) on plugin registry. Search API can retrieve plugins(Extensions/Themes) by searching titles, keywords or authornames(by default). We can also search on more fields apart from the previously mentioned by passing it as a param. This API can be a functional entry point for all the UI search-box usecases.
+
+### Parameters
+
+* **Required Parameters**
+
+  * **clientID {String}**: A unique identifier required for authenticating clients
+  * **query {String}**: String containing the text to  be searched
+* **Optional Parameters**
+    
+    * **filters {Object} (Default: Empty)**: Object contaning the fields array and sortBy field. See below e.g
+        
+      * **fields {String Array}**: Array containing additional fields to be searched.
+      * **sortyBy {String}**: Constant value(asc/desc) to sort the results by total number of downloads.
+      E.g,
+      
+      ``` const filter = { fields:['metadata.author.name','metadata.author.email'], sortBy:'desc'}``` 
+   *  **resultSize {Integer} (Default: 10)** : SearchResults list size.
+   * **skipIndex {Integer} {Default: 0}**: Integer value required for pagination
+
+### Sample Request
+
+``` curl -d '{"clientID":"your_iD","query":"Python"}' -H "Content-Type: application/json" http://localhost:3000/search ```
+
+## getPlugins API
+
+This API can be used to retrieve plugins by assetType(Extension/Theme) (see below for detailed params) on plugin registry. We can also apply certain keywords as filters to refine our search results. This API can be a functional entry point for loading plugins by default in the UI.r all the UI search-box usecases.
+
+### Parameters
+
+* **Required Parameters**
+
+  * **clientID {String}**: A unique identifier required for authenticating clients
+  * **assetType {String}**: accepted values are 'EXTENSION' or 'THEME'
+* **Optional Parameters**
+    
+    * **filters {Object} (Default: Empty)**: Object contaning the fields array and sortBy field. See below e.g
+        
+      * **keywords {String Array}**: Array containing additional keywords to match.
+      * **sortyBy {String}**: Constant value(asc/desc) to sort the results by total number of downloads.
+      E.g,
+      
+      ``` const filter = { keywords:['HTML','HTML5'], sortBy:'desc'}``` 
+   *  **resultSize {Integer} (Default: 10)** : SearchResults list size.
+   * **skipIndex {Integer} {Default: 0}**: Integer value required for pagination
 
 # Commands available
 
