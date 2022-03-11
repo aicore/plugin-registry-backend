@@ -64,7 +64,7 @@ app.post('/search', async function(req, res) {
 
     if (!validationResponse.isValid) {
         res.status(validationResponse.statusCode);
-        res.json({error: validationResponse.errorMessage})
+        res.json({error: validationResponse.errorMessage});
         return ;
     }
 
@@ -112,7 +112,7 @@ app.post('/getPlugins', async function(req, res) {
 
     if (!validationResponse.isValid) {
         res.status(validationResponse.statusCode);
-        res.json({error: validationResponse.errorMessage})
+        res.json({error: validationResponse.errorMessage});
         return ;
     }
 
