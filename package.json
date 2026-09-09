@@ -58,7 +58,7 @@
   "dependencies": {
     "@aicore/elasticsearch-lib": "^1.0.1",
     "cors": "^2.8.5",
-    "dotenv": "^16.0.0",
+    "dotenv": "^17.0.0",
     "express": "^4.17.3",
     "superagent": "^7.1.1"
   }
